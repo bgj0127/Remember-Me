@@ -41,20 +41,35 @@ const config = {
         include: /\.module\.css$/,
       },
       {
-        test: /\.svg$/,
+        test: /\.(svg|png|jpg)$/,
         use: "file-loader",
       },
       {
-        test: /\.png$/,
+        test: /\.(svg|png|jpg|gif|ico)?$/,
         use: [
           {
             loader: "url-loader",
             options: {
-              mimetype: "image/png",
+              limit: 10000,
+              fallback: 'file-loader',
+              name: 'assets/images/[name].[ext]'
             },
           },
         ],
       },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 10000,
+              fallback: 'file-loader',
+              name: 'assets/fonts/[name].[ext]',
+            }
+          }
+        ]
+      }
     ],
   },
   resolve: {
@@ -71,6 +86,9 @@ const config = {
       patterns: [{ from: "public", to: "." }],
     }),
   ],
+  performance: {
+    hints: process.env.NODE_ENV === 'production' ? "warning" : false
+  }
 };
 
 module.exports = config;
